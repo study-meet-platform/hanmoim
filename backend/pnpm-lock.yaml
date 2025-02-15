@@ -53,9 +53,12 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      ssh2:
+        specifier: ^1.16.0
+        version: 1.16.0
       tunnel-ssh:
-        specifier: ^5.2.0
-        version: 5.2.0
+        specifier: 4.1.6
+        version: 4.1.6
       typeorm-naming-strategies:
         specifier: ^4.1.0
         version: 4.1.0(typeorm@0.3.20(mysql2@3.12.0)(ts-node@10.9.2(@types/node@20.17.14)(typescript@5.7.3)))
@@ -1236,6 +1239,10 @@ packages:
     resolution: {integrity: sha512-9IkYqtX3YHPCzoVg1Py+o9057a3i0fp7S530UWokCSaFVTc7CwXPRiOjRjBQQ18ZCNafx78YfnG+HALxtVmOGA==}
     engines: {node: '>=10.0.0'}
 
+  cpu-features@0.0.2:
+    resolution: {integrity: sha512-/2yieBqvMcRj8McNzkycjW2v3OIUOibBfd2dLEJ0nWts8NobAxwiyw9phVNS6oDL8x8tz9F7uNVFEVpJncQpeA==}
+    engines: {node: '>=8.0.0'}
+
   create-jest@29.7.0:
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -2077,6 +2084,9 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.defaults@4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+
   lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
 
@@ -2656,6 +2666,10 @@ packages:
     resolution: {integrity: sha512-r1X4KsBGedJqo7h8F5c4Ybpcr5RjyP+aWIG007uBPRjmdQWfEiVLzSK71Zji1B9sKxwaCvD8y8cwSkYrlLiRRg==}
     engines: {node: '>=10.16.0'}
 
+  ssh2@1.4.0:
+    resolution: {integrity: sha512-XvXwcXKvS452DyQvCa6Ct+chpucwc/UyxgliYz+rWXJ3jDHdtBb9xgmxJdMmnIn5bpgGAEV3KaEsH98ZGPHqwg==}
+    engines: {node: '>=10.16.0'}
+
   stack-utils@2.0.6:
     resolution: {integrity: sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==}
     engines: {node: '>=10'}
@@ -2868,8 +2882,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  tunnel-ssh@5.2.0:
-    resolution: {integrity: sha512-IGiyhE2RSt3NVvZ7aKH3ykziAxKNPe/z97Rab/lrIXslif/cq7J/m6EXfERlDITiFyGGYMqqi5SSrt/mk1VbEg==}
+  tunnel-ssh@4.1.6:
+    resolution: {integrity: sha512-y7+x+T3F3rkx2Zov5Tk9DGfeEBVAdWU3A/91E0Dk5rrZ/VFIlpV2uhhRuaISJUdyG0N+Lcp1fXZMXz+ovPt5vA==}
 
   tweetnacl@0.14.5:
     resolution: {integrity: sha512-KXXFFdAbFXY4geFIwoyNK+f5Z1b7swfXABfL7HXCmoIWMKU3dmS26672A4EeQtDzLKy7SXmfBu51JolvEKwtGA==}
@@ -4505,6 +4519,11 @@ snapshots:
       nan: 2.22.0
     optional: true
 
+  cpu-features@0.0.2:
+    dependencies:
+      nan: 2.22.0
+    optional: true
+
   create-jest@29.7.0(@types/node@20.17.14)(ts-node@10.9.2(@types/node@20.17.14)(typescript@5.7.3)):
     dependencies:
       '@jest/types': 29.6.3
@@ -5580,6 +5599,8 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.defaults@4.2.0: {}
+
   lodash.memoize@4.1.2: {}
 
   lodash.merge@4.6.2: {}
@@ -6124,6 +6145,14 @@ snapshots:
       cpu-features: 0.0.10
       nan: 2.22.0
 
+  ssh2@1.4.0:
+    dependencies:
+      asn1: 0.2.6
+      bcrypt-pbkdf: 1.0.2
+    optionalDependencies:
+      cpu-features: 0.0.2
+      nan: 2.22.0
+
   stack-utils@2.0.6:
     dependencies:
       escape-string-regexp: 2.0.0
@@ -6334,9 +6363,13 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tunnel-ssh@5.2.0:
+  tunnel-ssh@4.1.6:
     dependencies:
-      ssh2: 1.16.0
+      debug: 2.6.9
+      lodash.defaults: 4.2.0
+      ssh2: 1.4.0
+    transitivePeerDependencies:
+      - supports-color
 
   tweetnacl@0.14.5: {}
 
