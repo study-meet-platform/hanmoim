@@ -83,6 +83,9 @@ importers:
       tunnel-ssh:
         specifier: 4.1.6
         version: 4.1.6
+      typeorm:
+        specifier: ^0.3.20
+        version: 0.3.20(mysql2@3.12.0)(ts-node@10.9.2(@types/node@20.17.19)(typescript@5.7.3))
       typeorm-naming-strategies:
         specifier: ^4.1.0
         version: 4.1.0(typeorm@0.3.20(mysql2@3.12.0)(ts-node@10.9.2(@types/node@20.17.19)(typescript@5.7.3)))
@@ -6578,7 +6581,7 @@ snapshots:
 
   send@1.1.0:
     dependencies:
-      debug: 4.3.6
+      debug: 4.4.0
       destroy: 1.2.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
