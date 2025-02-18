@@ -22,8 +22,8 @@ jobs:
       - name: Install Dependencies
         run: |
           npm i -g pnpm
-          pnpm approve-builds
           pnpm i --force
+          pnpm approve-builds
         working-directory: "backend"
 
       - name: Build
