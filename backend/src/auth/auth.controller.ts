@@ -6,6 +6,8 @@ import { Request, Response } from 'express';
 import { Profile } from './decorators/profile.decorator';
 import { Profile as NaverProfile } from 'passport-naver-v2';
 import { ConfigService } from '@nestjs/config';
+import { KakaoGuard } from './guards/kakao.guard';
+import { Profile as KakaoProfile } from 'passport-kakao';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,6 +21,15 @@ export class AuthController {
   @Get('naver/redirect')
   async naverCallback(
     @Profile() profile: NaverProfile,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return res.redirect(this.configService.get<string>('CLIENT_URL'));
+  }
+
+  @UseGuards(KakaoGuard)
+  @Get('kakao/redirect')
+  async kakaoCallback(
+    @Profile() profile: KakaoProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
     return res.redirect(this.configService.get<string>('CLIENT_URL'));
