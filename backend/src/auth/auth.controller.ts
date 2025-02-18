@@ -8,6 +8,8 @@ import { Profile as NaverProfile } from 'passport-naver-v2';
 import { ConfigService } from '@nestjs/config';
 import { KakaoGuard } from './guards/kakao.guard';
 import { Profile as KakaoProfile } from 'passport-kakao';
+import { GoogleGuard } from './guards/google.guard';
+import { Profile as GoogleProfile } from 'passport-google-oauth20';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,6 +32,15 @@ export class AuthController {
   @Get('kakao/redirect')
   async kakaoCallback(
     @Profile() profile: KakaoProfile,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return res.redirect(this.configService.get<string>('CLIENT_URL'));
+  }
+
+  @UseGuards(GoogleGuard)
+  @Get('google/redirect')
+  async googleCallback(
+    @Profile() profile: GoogleProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
     return res.redirect(this.configService.get<string>('CLIENT_URL'));
