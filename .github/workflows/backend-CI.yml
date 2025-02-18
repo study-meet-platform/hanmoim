@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm i pnpm
+          npm i -g pnpm
           pnpm install
         working-directory: "backend"
 
