@@ -7,6 +7,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as fs from 'fs';
 import { Client } from 'ssh2';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { AuthModule } from './auth/auth.module';
       },
     }),
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
