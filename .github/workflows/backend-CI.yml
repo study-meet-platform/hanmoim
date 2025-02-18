@@ -23,7 +23,6 @@ jobs:
         run: |
           npm i -g pnpm
           pnpm i --force
-          pnpm approve-builds
         working-directory: "backend"
 
       - name: Build
