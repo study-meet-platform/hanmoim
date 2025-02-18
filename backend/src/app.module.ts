@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as fs from 'fs';
 import { Client } from 'ssh2';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { Client } from 'ssh2';
         });
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
