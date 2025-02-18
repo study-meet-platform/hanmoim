@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { NaverStrategy } from './strategies/naver.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { AccessStrategy } from './strategies/access.strategy';
+import { RefreshStrategy } from './strategies/refresh.strategy';
 
 @Module({
   imports: [
@@ -23,6 +25,13 @@ import { GoogleStrategy } from './strategies/google.strategy';
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, NaverStrategy, NaverStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    NaverStrategy,
+    NaverStrategy,
+    GoogleStrategy,
+    AccessStrategy,
+    RefreshStrategy,
+  ],
 })
 export class AuthModule {}
