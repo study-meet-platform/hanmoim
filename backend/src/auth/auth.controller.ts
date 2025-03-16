@@ -34,18 +34,27 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @UseGuards(NaverGuard)
-  @Get('naver/redirect')
-  async naverCallback(
-    @Profile() profile: NaverProfile,
-    @Res({ passthrough: true }) res: Response,
+  async validateAndGetJWT(
+    profile: NaverProfile | KakaoProfile | GoogleProfile,
   ) {
-    const userId: number = await this.authService.validateNaverUser(profile);
+    const userId: number = await this.authService.validateUser(profile);
 
     const accessToken: string = await this.authService.makeAccessToken(userId);
     const refreshToken: string =
       await this.authService.makeRefreshToken(userId);
     await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+
+    return { accessToken, refreshToken };
+  }
+
+  @UseGuards(NaverGuard)
+  @HttpCode(302)
+  @Get('naver/redirect')
+  async naverCallback(
+    @Profile() profile: NaverProfile,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.validateAndGetJWT(profile);
 
     return res
       .cookie(
@@ -62,17 +71,13 @@ export class AuthController {
   }
 
   @UseGuards(KakaoGuard)
+  @HttpCode(302)
   @Get('kakao/redirect')
   async kakaoCallback(
     @Profile() profile: KakaoProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const userId: number = await this.authService.validateKakaoUser(profile);
-
-    const accessToken: string = await this.authService.makeAccessToken(userId);
-    const refreshToken: string =
-      await this.authService.makeRefreshToken(userId);
-    await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+    const { accessToken, refreshToken } = await this.validateAndGetJWT(profile);
 
     return res
       .cookie(
@@ -89,17 +94,13 @@ export class AuthController {
   }
 
   @UseGuards(GoogleGuard)
+  @HttpCode(302)
   @Get('google/redirect')
   async googleCallback(
     @Profile() profile: GoogleProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const userId: number = await this.authService.validateGoogleUser(profile);
-
-    const accessToken: string = await this.authService.makeAccessToken(userId);
-    const refreshToken: string =
-      await this.authService.makeRefreshToken(userId);
-    await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+    const { accessToken, refreshToken } = await this.validateAndGetJWT(profile);
 
     return res
       .cookie(
@@ -116,6 +117,7 @@ export class AuthController {
   }
 
   @UseGuards(RefreshGuard)
+  @HttpCode(302)
   @Post('logout')
   async logout(
     @UserId(ParseIntPipe) userId: number,
