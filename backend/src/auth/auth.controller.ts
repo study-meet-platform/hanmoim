@@ -1,7 +1,10 @@
 import {
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotAcceptableException,
+  ParseIntPipe,
   Post,
   Req,
   Res,
@@ -10,7 +13,7 @@ import {
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { NaverGuard } from './guards/naver.guard';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Profile } from './decorators/profile.decorator';
 import { Profile as NaverProfile } from 'passport-naver-v2';
 import { ConfigService } from '@nestjs/config';
@@ -21,6 +24,7 @@ import { Profile as GoogleProfile } from 'passport-google-oauth20';
 import { RefreshGuard } from './guards/refresh.guard';
 import { UserId } from '../decorators/user-id.decorator';
 import { RefreshToken } from '../decorators/refresh-token.decorator';
+import { CookieOptions } from './options/cookie.options';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,8 +48,16 @@ export class AuthController {
     await this.authService.userRefreshTokenUpdate(userId, refreshToken);
 
     return res
-      .cookie('accessToken', accessToken)
-      .cookie('refreshToken', refreshToken)
+      .cookie(
+        'accessToken',
+        accessToken,
+        await CookieOptions(this.configService, 'accessToken'),
+      )
+      .cookie(
+        'refreshToken',
+        refreshToken,
+        await CookieOptions(this.configService, 'refreshToken'),
+      )
       .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 
@@ -63,8 +75,16 @@ export class AuthController {
     await this.authService.userRefreshTokenUpdate(userId, refreshToken);
 
     return res
-      .cookie('accessToken', accessToken)
-      .cookie('refreshToken', refreshToken)
+      .cookie(
+        'accessToken',
+        accessToken,
+        await CookieOptions(this.configService, 'accessToken'),
+      )
+      .cookie(
+        'refreshToken',
+        refreshToken,
+        await CookieOptions(this.configService, 'refreshToken'),
+      )
       .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 
@@ -82,15 +102,23 @@ export class AuthController {
     await this.authService.userRefreshTokenUpdate(userId, refreshToken);
 
     return res
-      .cookie('accessToken', accessToken)
-      .cookie('refreshToken', refreshToken)
+      .cookie(
+        'accessToken',
+        accessToken,
+        await CookieOptions(this.configService, 'accessToken'),
+      )
+      .cookie(
+        'refreshToken',
+        refreshToken,
+        await CookieOptions(this.configService, 'refreshToken'),
+      )
       .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 
   @UseGuards(RefreshGuard)
   @Post('logout')
   async logout(
-    @UserId() userId: number,
+    @UserId(ParseIntPipe) userId: number,
     @RefreshToken() refreshToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -99,8 +127,31 @@ export class AuthController {
     }
     await this.authService.logoutUser(userId);
     return res
-      .cookie('accessToken', '')
-      .cookie('refreshToken', '')
+      .cookie(
+        'accessToken',
+        '',
+        await CookieOptions(this.configService, 'logout'),
+      )
+      .cookie(
+        'refreshToken',
+        '',
+        await CookieOptions(this.configService, 'logout'),
+      )
       .redirect(this.configService.get<string>('CLIENT_URL'));
+  }
+
+  @UseGuards(RefreshGuard)
+  @HttpCode(HttpStatus.CREATED)
+  @Get('refresh')
+  async refreshAccessToken(
+    @UserId(ParseIntPipe) userId: number,
+    @RefreshToken() refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (!(await this.authService.validateLogoutUser(userId, refreshToken))) {
+      throw new NotAcceptableException('Invalid RefreshToken');
+    }
+    const accessToken: string = await this.authService.makeAccessToken(userId);
+    return res.cookie('accessToken', accessToken).send();
   }
 }
