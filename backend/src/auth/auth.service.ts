@@ -22,45 +22,9 @@ export class AuthService {
     return generateUsername('', 3, 10);
   }
 
-  async validateNaverUser(profile: NaverProfile): Promise<number> {
-    const user: User = await this.usersService.findOneByProvider(
-      profile.id,
-      profile.provider,
-    );
-    if (!user) {
-      const newUser: CreateUserDto = {
-        nickname: await this.randomNickname(),
-        profileImage: profile.profileImage,
-        email: profile.email,
-        social: profile.provider,
-        socialId: profile.id,
-        mannerScore: 0,
-      };
-      return (await this.usersService.create(newUser)).userId;
-    }
-    return user.userId;
-  }
-
-  async validateKakaoUser(profile: KakaoProfile): Promise<number> {
-    const user: User = await this.usersService.findOneByProvider(
-      profile.id,
-      profile.provider,
-    );
-    if (!user) {
-      const newUser: CreateUserDto = {
-        nickname: await this.randomNickname(),
-        profileImage: profile.profileImage,
-        email: profile.email,
-        social: profile.provider,
-        socialId: profile.id,
-        mannerScore: 0,
-      };
-      return (await this.usersService.create(newUser)).userId;
-    }
-    return user.userId;
-  }
-
-  async validateGoogleUser(profile: GoogleProfile): Promise<number> {
+  async validateUser(
+    profile: NaverProfile | KakaoProfile | GoogleProfile,
+  ): Promise<number> {
     const user: User = await this.usersService.findOneByProvider(
       profile.id,
       profile.provider,
