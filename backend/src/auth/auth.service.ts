@@ -17,4 +17,12 @@ export class AuthService {
       expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION'),
     });
   }
+
+  async makeRefreshToken(userId: number): Promise<string> {
+    const payload: JwtPayload = { userId };
+    return await this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+      expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION'),
+    });
+  }
 }
