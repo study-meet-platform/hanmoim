@@ -35,4 +35,8 @@ export class UsersService {
   async remove(userId: number): Promise<DeleteResult> {
     return await this.userRepository.delete(userId);
   }
+
+  async findOneByProvider(socialId: string, social: string): Promise<User> {
+    return await this.userRepository.findOneBy({ socialId, social });
+  }
 }

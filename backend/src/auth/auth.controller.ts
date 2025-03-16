@@ -10,6 +10,7 @@ import { KakaoGuard } from './guards/kakao.guard';
 import { Profile as KakaoProfile } from 'passport-kakao';
 import { GoogleGuard } from './guards/google.guard';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
+import { User } from '../users/entities/user.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,7 +26,16 @@ export class AuthController {
     @Profile() profile: NaverProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return res.redirect(this.configService.get<string>('CLIENT_URL'));
+    const userId: number = await this.authService.validateNaverUser(profile);
+    const accessToken: string = await this.authService.makeAccessToken(userId);
+    const refreshToken: string =
+      await this.authService.makeRefreshToken(userId);
+    await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+
+    return res
+      .cookie('accessToken', accessToken)
+      .cookie('refreshToken', refreshToken)
+      .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 
   @UseGuards(KakaoGuard)
