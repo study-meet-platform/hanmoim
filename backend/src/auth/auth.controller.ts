@@ -27,6 +27,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const userId: number = await this.authService.validateNaverUser(profile);
+
     const accessToken: string = await this.authService.makeAccessToken(userId);
     const refreshToken: string =
       await this.authService.makeRefreshToken(userId);
@@ -44,7 +45,17 @@ export class AuthController {
     @Profile() profile: KakaoProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return res.redirect(this.configService.get<string>('CLIENT_URL'));
+    const userId: number = await this.authService.validateKakaoUser(profile);
+
+    const accessToken: string = await this.authService.makeAccessToken(userId);
+    const refreshToken: string =
+      await this.authService.makeRefreshToken(userId);
+    await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+
+    return res
+      .cookie('accessToken', accessToken)
+      .cookie('refreshToken', refreshToken)
+      .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 
   @UseGuards(GoogleGuard)
@@ -53,6 +64,16 @@ export class AuthController {
     @Profile() profile: GoogleProfile,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return res.redirect(this.configService.get<string>('CLIENT_URL'));
+    const userId: number = await this.authService.validateGoogleUser(profile);
+
+    const accessToken: string = await this.authService.makeAccessToken(userId);
+    const refreshToken: string =
+      await this.authService.makeRefreshToken(userId);
+    await this.authService.userRefreshTokenUpdate(userId, refreshToken);
+
+    return res
+      .cookie('accessToken', accessToken)
+      .cookie('refreshToken', refreshToken)
+      .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 }

@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from './jwt.payload';
 import { Profile as NaverProfile } from 'passport-naver-v2';
+import { Profile as KakaoProfile } from 'passport-kakao';
+import { profile as GoogleProfile } from 'passport-google-oauth20';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -16,6 +18,42 @@ export class AuthService {
   ) {}
 
   async validateNaverUser(profile: NaverProfile): Promise<number> {
+    const user: User = await this.usersService.findOneByProvider(
+      profile.id,
+      profile.provider,
+    );
+    if (!user) {
+      const newUser: CreateUserDto = {
+        nickname: profile.nickname,
+        profileImage: profile.profileImage,
+        email: profile.email,
+        social: profile.provider,
+        socialId: profile.id,
+      };
+      return (await this.usersService.create(newUser)).userId;
+    }
+    return user.userId;
+  }
+
+  async validateKakaoUser(profile: KakaoProfile): Promise<number> {
+    const user: User = await this.usersService.findOneByProvider(
+      profile.id,
+      profile.provider,
+    );
+    if (!user) {
+      const newUser: CreateUserDto = {
+        nickname: profile.nickname,
+        profileImage: profile.profileImage,
+        email: profile.email,
+        social: profile.provider,
+        socialId: profile.id,
+      };
+      return (await this.usersService.create(newUser)).userId;
+    }
+    return user.userId;
+  }
+
+  async validateGoogleUser(profile: GoogleProfile): Promise<number> {
     const user: User = await this.usersService.findOneByProvider(
       profile.id,
       profile.provider,
