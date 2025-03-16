@@ -49,6 +49,12 @@ export class User {
   socialId: string;
 
   @ApiProperty()
+  @Column()
+  @IsString()
+  @Exclude()
+  refreshToken: string;
+
+  @ApiProperty()
   @CreateDateColumn()
   @IsDate()
   @Exclude()
