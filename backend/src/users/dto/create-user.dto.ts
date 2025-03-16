@@ -21,6 +21,9 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
-  @Exclude()
   socialId: string;
+
+  @ApiProperty()
+  @IsNumber()
+  mannerScore: number;
 }

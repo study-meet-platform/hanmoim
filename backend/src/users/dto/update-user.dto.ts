@@ -6,11 +6,8 @@ export class UpdateUserDto extends PickType(PartialType(CreateUserDto), [
   'nickname',
   'profileImage',
   'email',
+  'mannerScore',
 ]) {
-  @ApiProperty()
-  @IsNumber()
-  mannerScore: number;
-
   @ApiProperty()
   @IsString()
   refreshToken: string;
