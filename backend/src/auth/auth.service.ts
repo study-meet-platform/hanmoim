@@ -8,6 +8,7 @@ import { profile as GoogleProfile } from 'passport-google-oauth20';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { generateUsername } from 'unique-username-generator';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,10 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
+  async randomNickname(): Promise<string> {
+    return generateUsername('', 3, 10);
+  }
+
   async validateNaverUser(profile: NaverProfile): Promise<number> {
     const user: User = await this.usersService.findOneByProvider(
       profile.id,
@@ -24,7 +29,7 @@ export class AuthService {
     );
     if (!user) {
       const newUser: CreateUserDto = {
-        nickname: profile.nickname,
+        nickname: await this.randomNickname(),
         profileImage: profile.profileImage,
         email: profile.email,
         social: profile.provider,
@@ -43,7 +48,7 @@ export class AuthService {
     );
     if (!user) {
       const newUser: CreateUserDto = {
-        nickname: profile.nickname,
+        nickname: await this.randomNickname(),
         profileImage: profile.profileImage,
         email: profile.email,
         social: profile.provider,
@@ -62,7 +67,7 @@ export class AuthService {
     );
     if (!user) {
       const newUser: CreateUserDto = {
-        nickname: profile.nickname,
+        nickname: await this.randomNickname(),
         profileImage: profile.profileImage,
         email: profile.email,
         social: profile.provider,
