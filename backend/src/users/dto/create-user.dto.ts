@@ -16,8 +16,8 @@ export class CreateUserDto {
   profileImage: string;
 
   @ApiProperty()
-  @IsNumber()
-  social: number;
+  @IsString()
+  social: string;
 
   @ApiProperty()
   @IsString()
