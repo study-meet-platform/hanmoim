@@ -1,4 +1,12 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotAcceptableException,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { NaverGuard } from './guards/naver.guard';
@@ -10,7 +18,9 @@ import { KakaoGuard } from './guards/kakao.guard';
 import { Profile as KakaoProfile } from 'passport-kakao';
 import { GoogleGuard } from './guards/google.guard';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
-import { User } from '../users/entities/user.entity';
+import { RefreshGuard } from './guards/refresh.guard';
+import { UserId } from '../decorators/user-id.decorator';
+import { RefreshToken } from '../decorators/refresh-token.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -74,6 +84,23 @@ export class AuthController {
     return res
       .cookie('accessToken', accessToken)
       .cookie('refreshToken', refreshToken)
+      .redirect(this.configService.get<string>('CLIENT_URL'));
+  }
+
+  @UseGuards(RefreshGuard)
+  @Post('logout')
+  async logout(
+    @UserId() userId: number,
+    @RefreshToken() refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (!(await this.authService.validateLogoutUser(userId, refreshToken))) {
+      throw new NotAcceptableException('Invalid RefreshToken');
+    }
+    await this.authService.logoutUser(userId);
+    return res
+      .cookie('accessToken', '')
+      .cookie('refreshToken', '')
       .redirect(this.configService.get<string>('CLIENT_URL'));
   }
 }

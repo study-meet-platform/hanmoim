@@ -29,6 +29,7 @@ export class AuthService {
         email: profile.email,
         social: profile.provider,
         socialId: profile.id,
+        mannerScore: 0,
       };
       return (await this.usersService.create(newUser)).userId;
     }
@@ -47,6 +48,7 @@ export class AuthService {
         email: profile.email,
         social: profile.provider,
         socialId: profile.id,
+        mannerScore: 0,
       };
       return (await this.usersService.create(newUser)).userId;
     }
@@ -65,6 +67,7 @@ export class AuthService {
         email: profile.email,
         social: profile.provider,
         socialId: profile.id,
+        mannerScore: 0,
       };
       return (await this.usersService.create(newUser)).userId;
     }
@@ -88,6 +91,16 @@ export class AuthService {
   }
 
   async userRefreshTokenUpdate(userId: number, refreshToken: string) {
-    await this.usersService.update(userId, { refreshToken, mannerScore: 0 });
+    await this.usersService.update(userId, { refreshToken });
+  }
+
+  async validateLogoutUser(userId: number, refreshToken: string) {
+    return (
+      (await this.usersService.findOne(userId)).refreshToken === refreshToken
+    );
+  }
+
+  async logoutUser(userId: number) {
+    await this.usersService.update(userId, { refreshToken: '' });
   }
 }
