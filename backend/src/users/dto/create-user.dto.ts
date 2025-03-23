@@ -16,11 +16,14 @@ export class CreateUserDto {
   profileImage: string;
 
   @ApiProperty()
-  @IsNumber()
-  social: number;
+  @IsString()
+  social: string;
 
   @ApiProperty()
   @IsString()
-  @Exclude()
   socialId: string;
+
+  @ApiProperty()
+  @IsNumber()
+  mannerScore: number;
 }

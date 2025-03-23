@@ -8,6 +8,8 @@ import { NaverStrategy } from './strategies/naver.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { AccessStrategy } from './strategies/access.strategy';
 import { RefreshStrategy } from './strategies/refresh.strategy';
+import { UsersModule } from '../users/users.module';
+import { KakaoStrategy } from './strategies/kakao.strategy';
 
 @Module({
   imports: [
@@ -23,12 +25,13 @@ import { RefreshStrategy } from './strategies/refresh.strategy';
       }),
     }),
     PassportModule,
+    UsersModule,
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
     NaverStrategy,
-    NaverStrategy,
+    KakaoStrategy,
     GoogleStrategy,
     AccessStrategy,
     RefreshStrategy,

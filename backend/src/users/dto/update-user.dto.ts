@@ -1,13 +1,15 @@
 import { CreateUserDto } from './create-user.dto';
 import { ApiProperty, PickType, PartialType } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto extends PickType(PartialType(CreateUserDto), [
   'nickname',
   'profileImage',
   'email',
+  'mannerScore',
 ]) {
   @ApiProperty()
-  @IsNumber()
-  mannerScore: number;
+  @IsOptional()
+  @IsString()
+  refreshToken: string;
 }

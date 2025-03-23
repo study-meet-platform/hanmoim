@@ -34,8 +34,8 @@ export class User {
 
   @ApiProperty()
   @Column()
-  @IsNumber()
-  social: number;
+  @IsString()
+  social: string;
 
   @ApiProperty()
   @Column()
@@ -47,6 +47,12 @@ export class User {
   @IsString()
   @Exclude()
   socialId: string;
+
+  @ApiProperty()
+  @Column()
+  @IsString()
+  @Exclude()
+  refreshToken: string;
 
   @ApiProperty()
   @CreateDateColumn()
