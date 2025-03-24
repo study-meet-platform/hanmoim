@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
-@Entity('schedules')
+@Entity('schedule')
 export class Schedule {
   @ApiProperty()
   @PrimaryGeneratedColumn()
@@ -42,6 +42,7 @@ export class Schedule {
   createdAt: string;
 
   @ApiProperty()
+  @Column()
   @IsDate()
-  eventTime: string;
+  eventTime: Date;
 }

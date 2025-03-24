@@ -1,34 +1,60 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  Query,
+} from '@nestjs/common';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { Schedule } from './entities/schedule.entity';
 
 @Controller('schedules')
 export class SchedulesController {
   constructor(private readonly schedulesService: SchedulesService) {}
 
   @Post()
-  create(@Body() createScheduleDto: CreateScheduleDto) {
-    return this.schedulesService.create(createScheduleDto);
+  async create(
+    @Body() createScheduleDto: CreateScheduleDto,
+  ): Promise<Schedule> {
+    return await this.schedulesService.create(createScheduleDto);
   }
 
   @Get()
-  findAll() {
-    return this.schedulesService.findAll();
+  async findByRange(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<Schedule[]> {
+    const parsedStartDate = new Date(startDate);
+    const parsedEndDate = new Date(endDate);
+    return await this.schedulesService.findByRange(
+      parsedStartDate,
+      parsedEndDate,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.schedulesService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Schedule> {
+    return await this.schedulesService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScheduleDto: UpdateScheduleDto) {
-    return this.schedulesService.update(+id, updateScheduleDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateScheduleDto: UpdateScheduleDto,
+  ): Promise<UpdateResult> {
+    return await this.schedulesService.update(+id, updateScheduleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.schedulesService.remove(+id);
+  async remove(@Param('id') id: string): Promise<DeleteResult> {
+    return await this.schedulesService.remove(+id);
   }
 }
