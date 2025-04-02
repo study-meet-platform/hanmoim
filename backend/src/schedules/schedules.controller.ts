@@ -27,6 +27,7 @@ export class SchedulesController {
     return await this.schedulesService.create(createScheduleDto);
   }
 
+  // 기간 내의 일정들을 표시
   @Get()
   async findByRange(
     @Query('startDate') startDate: string,
@@ -40,6 +41,7 @@ export class SchedulesController {
     );
   }
 
+  // 하나의 일정만 표시
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Schedule> {
     return await this.schedulesService.findOne(+id);

@@ -6,7 +6,7 @@ import {
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Between, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Schedule } from './entities/schedule.entity';
 import { User } from '../users/entities/user.entity';
 
@@ -24,8 +24,14 @@ export class SchedulesService {
     return await this.scheduleRepository.save(newSchedule);
   }
 
-  findByRange(startDate, endDate) {
-    return `This action returns all schedules`;
+  async findByRange(startDate: Date, endDate: Date) {
+    return await this.scheduleRepository
+      .createQueryBuilder('entity')
+      .where('entity.createdAt BETWEEN :start AND :end', {
+        start: startDate,
+        end: endDate,
+      })
+      .getMany();
   }
 
   async findOne(scheduleId: number): Promise<Schedule> {

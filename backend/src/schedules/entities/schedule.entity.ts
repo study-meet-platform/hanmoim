@@ -17,10 +17,6 @@ export class Schedule {
   @IsNumber()
   scheduleId: number;
 
-  @ManyToOne(() => Room, { eager: false })
-  @JoinColumn({ name: 'roomId' })
-  room: Room;
-
   @ApiProperty()
   @Column()
   @IsNumber()
